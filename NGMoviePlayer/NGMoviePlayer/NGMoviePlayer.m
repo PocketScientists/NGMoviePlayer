@@ -732,9 +732,10 @@ static char playerAirPlayVideoActiveContext;
     }
 
     // when playing over AirPlay the previous duration always returns 1, so we check again
-    if ((!CMTIME_IS_VALID(duration) || duration.value/duration.timescale < 2) && CMTIME_IS_VALID(self.player.currentItem.asset.duration)) {
+    if ((!CMTIME_IS_VALID(duration) || duration.timescale == 0 || duration.value/duration.timescale < 2) && CMTIME_IS_VALID(self.player.currentItem.asset.duration)) {
         duration = self.player.currentItem.asset.duration;
     }
+    
 
     return duration;
 }
