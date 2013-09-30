@@ -79,7 +79,7 @@
     CGSize playerViewSize = self.moviePlayer.view.frame.size;
     CGSize playerViewInvertedSize = CGSizeMake(playerViewSize.height, playerViewSize.width);
     if (CGSizeEqualToSize(windowSize, playerViewSize) || CGSizeEqualToSize(windowSize, playerViewInvertedSize)) {
-        topControlsViewTop = 20.f;
+        topControlsViewTop = 0.f;
     }
 
     self.topControlsView.frame = CGRectMake(0.f,

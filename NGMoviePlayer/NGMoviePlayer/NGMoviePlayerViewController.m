@@ -63,12 +63,6 @@
     [self.moviePlayer addToSuperview:self.view withFrame:self.view.bounds];
 }
 
-- (void)viewDidUnload {
-    [super viewDidUnload];
-
-    [self.moviePlayer.view removeFromSuperview];
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.wantsFullScreenLayout = YES;
@@ -134,7 +128,9 @@
     if (self.navigationController != nil) {
         [self.navigationController popViewControllerAnimated:YES];
     } else {
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:^{
+            self.moviePlayer = nil;
+        }];
     }
 }
 
