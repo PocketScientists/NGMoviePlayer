@@ -282,7 +282,7 @@ static char playerLayerReadyForDisplayContext;
 
         UILabel *externalScreenLabel = [[UILabel alloc] initWithFrame:CGRectMake(29, externalScreenPlaceholderImageView.frame.size.height + (isIPad ? 15 : 5), 262, 30)];
         externalScreenLabel.font = [UIFont systemFontOfSize:(isIPad ? 26.0f : 20.0f)];
-        externalScreenLabel.textAlignment = UITextAlignmentCenter;
+        externalScreenLabel.textAlignment = NSTextAlignmentCenter;
         externalScreenLabel.backgroundColor = [UIColor clearColor];
         externalScreenLabel.textColor = [UIColor darkGrayColor];
         externalScreenLabel.text = self.airPlayVideoActive ? @"AirPlay" : @"VGA";
@@ -290,7 +290,7 @@ static char playerLayerReadyForDisplayContext;
 
         UILabel *externalScreenDescriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, externalScreenLabel.frame.origin.y + (isIPad ? 35 : 20), 320, 30)];
         externalScreenDescriptionLabel.font = [UIFont systemFontOfSize:(isIPad ? 14.0f : 10.0f)];
-        externalScreenDescriptionLabel.textAlignment = UITextAlignmentCenter;
+        externalScreenDescriptionLabel.textAlignment = NSTextAlignmentCenter;
         externalScreenDescriptionLabel.backgroundColor = [UIColor clearColor];
         externalScreenDescriptionLabel.textColor = [UIColor lightGrayColor];
         externalScreenDescriptionLabel.text = [NSString stringWithFormat:@"Dieses Video wird über %@ wiedergegeben.", externalScreenLabel.text];
