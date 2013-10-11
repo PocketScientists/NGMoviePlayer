@@ -23,3 +23,9 @@
 + (Class)moviePlayerClass;
 
 @end
+
+@interface NGMoviePlayerViewController (SubclassingHooks)
+
+- (void)dismiss;
+
+@end
