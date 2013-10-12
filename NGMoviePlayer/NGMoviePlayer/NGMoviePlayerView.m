@@ -150,7 +150,9 @@ static char playerLayerReadyForDisplayContext;
         NGMoviePlayerControlAction willAction = controlsVisible ? NGMoviePlayerControlActionWillShowControls : NGMoviePlayerControlActionWillHideControls;
         NGMoviePlayerControlAction didAction = controlsVisible ? NGMoviePlayerControlActionDidShowControls : NGMoviePlayerControlActionDidHideControls;
 
-        [self.delegate moviePlayerControl:self.controlsView didPerformAction:willAction];
+        if (![self.delegate moviePlayerControl:self.controlsView willPerformAction:willAction]) {
+            return;
+        }
 
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(fadeOutControls) object:nil];
         // Doesn't work on device (doesn't fade but jumps from alpha 0 to 1) -> currently deactivated

@@ -29,4 +29,7 @@ typedef enum {
 
 - (void)moviePlayerControl:(id)control didPerformAction:(NGMoviePlayerControlAction)action;
 
+// will get called for NGMoviePlayerControlActionWillShowControls and NGMoviePlayerControlActionWillHideControls
+- (BOOL)moviePlayerControl:(id)control willPerformAction:(NGMoviePlayerControlAction)action;
+
 @end

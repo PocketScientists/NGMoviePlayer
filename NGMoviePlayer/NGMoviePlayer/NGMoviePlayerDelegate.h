@@ -30,4 +30,9 @@
 - (void)moviePlayer:(NGMoviePlayer *)moviePlayer didChangeControlStyle:(NGMoviePlayerControlStyle)controlStyle;
 - (void)moviePlayer:(NGMoviePlayer *)moviePlayer didUpdateCurrentTime:(NSTimeInterval)currentTime;
 
+- (BOOL)moviePlayerWillShowControls:(NGMoviePlayer *)moviePlayer;
+- (void)moviePlayerDidShowControls:(NGMoviePlayer *)moviePlayer;
+- (BOOL)moviePlayerWillHideControls:(NGMoviePlayer *)moviePlayer;
+- (void)moviePlayerDidHideControls:(NGMoviePlayer *)moviePlayer;
+
 @end

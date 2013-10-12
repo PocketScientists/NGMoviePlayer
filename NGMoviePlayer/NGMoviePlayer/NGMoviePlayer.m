@@ -38,6 +38,11 @@ static char playerAirPlayVideoActiveContext;
 		unsigned int didChangeAirPlayActive:1;
         unsigned int didChangeControlStyle:1;
         unsigned int didUpdateCurrentTime:1;
+        
+        unsigned int willShowControls:1;
+        unsigned int didShowControls:1;
+        unsigned int willHideControls:1;
+        unsigned int didHideControls:1;
 	} _delegateFlags;
 
     BOOL _seekToInitialPlaybackTimeBeforePlay;
@@ -453,6 +458,11 @@ static char playerAirPlayVideoActiveContext;
         _delegateFlags.didChangeAirPlayActive = [delegate respondsToSelector:@selector(moviePlayer:didChangeAirPlayActive:)];
         _delegateFlags.didChangeControlStyle = [delegate respondsToSelector:@selector(moviePlayer:didChangeControlStyle:)];
         _delegateFlags.didUpdateCurrentTime = [delegate respondsToSelector:@selector(moviePlayer:didUpdateCurrentTime:)];
+        
+        _delegateFlags.willHideControls = [delegate respondsToSelector:@selector(moviePlayerWillHideControls:)];
+        _delegateFlags.didHideControls = [delegate respondsToSelector:@selector(moviePlayerDidHideControls:)];
+        _delegateFlags.willShowControls = [delegate respondsToSelector:@selector(moviePlayerWillShowControls:)];
+        _delegateFlags.didHideControls = [delegate respondsToSelector:@selector(moviePlayerDidShowControls:)];
     }
 }
 
@@ -680,19 +690,21 @@ static char playerAirPlayVideoActiveContext;
         }
 
         case NGMoviePlayerControlActionWillShowControls: {
-            [self moviePlayerWillShowControlsWithDuration:kNGFadeDuration];
-            [self.view restartFadeOutControlsViewTimer];
+            if (!_delegateFlags.willShowControls || [self.delegate moviePlayerWillShowControls:self]) {
+                [self moviePlayerWillShowControlsWithDuration:kNGFadeDuration];
+            }
+            break;
+        }
+            
+        case NGMoviePlayerControlActionWillHideControls: {
+            if (!_delegateFlags.willHideControls || [self.delegate moviePlayerWillHideControls:self]) {
+                [self moviePlayerWillHideControlsWithDuration:kNGFadeDuration];
+            }
             break;
         }
 
         case NGMoviePlayerControlActionDidShowControls: {
             [self moviePlayerDidShowControls];
-            [self.view restartFadeOutControlsViewTimer];
-            break;
-        }
-
-        case NGMoviePlayerControlActionWillHideControls: {
-            [self moviePlayerWillHideControlsWithDuration:kNGFadeDuration];
             [self.view restartFadeOutControlsViewTimer];
             break;
         }
@@ -713,6 +725,32 @@ static char playerAirPlayVideoActiveContext;
             break;
 
     }
+}
+
+- (BOOL)moviePlayerControl:(id)control willPerformAction:(NGMoviePlayerControlAction)action {
+    switch (action) {
+        case NGMoviePlayerControlActionWillShowControls: {
+            if (!_delegateFlags.willShowControls || [self.delegate moviePlayerWillShowControls:self]) {
+                [self moviePlayerWillShowControlsWithDuration:kNGFadeDuration];
+            } else {
+                return NO;
+            }
+            break;
+        }
+            
+        case NGMoviePlayerControlActionWillHideControls: {
+            if (!_delegateFlags.willHideControls || [self.delegate moviePlayerWillHideControls:self]) {
+                [self moviePlayerWillHideControlsWithDuration:kNGFadeDuration];
+            } else {
+                return NO;
+            }
+            break;
+        }
+            
+        default:
+            break;
+    }
+    return YES;
 }
 
 ////////////////////////////////////////////////////////////////////////
