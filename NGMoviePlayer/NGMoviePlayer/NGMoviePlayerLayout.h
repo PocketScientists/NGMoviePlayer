@@ -33,6 +33,8 @@
 /** layouts the controls for the given control style */
 - (void)layoutControlsWithControlStyle:(NGMoviePlayerControlStyle)controlStyle;
 
+- (void)cleanup;
+
 @end
 
 

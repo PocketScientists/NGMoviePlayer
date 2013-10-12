@@ -141,4 +141,8 @@
     // Subclasses must implement
 }
 
+- (void)cleanup {
+    
+}
+
 @end
