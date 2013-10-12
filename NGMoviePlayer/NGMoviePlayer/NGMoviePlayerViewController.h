@@ -13,7 +13,10 @@
 @class NGMoviePlayer;
 
 
-@interface NGMoviePlayerViewController : UIViewController <NGMoviePlayerDelegate>
+@interface NGMoviePlayerViewController : UIViewController <NGMoviePlayerDelegate> {
+    @protected
+    NGMoviePlayer *_moviePlayer;
+}
 
 @property (nonatomic, strong, readonly) NGMoviePlayer *moviePlayer;
 
