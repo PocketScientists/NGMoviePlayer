@@ -215,6 +215,7 @@ static char playerLayerReadyForDisplayContext;
 
         [placeholderView resetToInitialState];
     }
+    self.placeholderView.frame = self.bounds;
 
     if (animated) {
         self.placeholderView.alpha = 0.f;
