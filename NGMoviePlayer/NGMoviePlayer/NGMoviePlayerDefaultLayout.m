@@ -58,14 +58,7 @@
 - (void)customizeBottomControlsViewWithControlStyle:(NGMoviePlayerControlStyle)controlStyle {
     // update styling of bottom controls view
     UIImageView *bottomControlsImageView = (UIImageView *)self.bottomControlsView;
-
-    if (controlStyle == NGMoviePlayerControlStyleFullscreen) {
-        bottomControlsImageView.backgroundColor = [UIColor clearColor];
-        bottomControlsImageView.image = self.bottomControlFullscreenImage;
-    } else if (controlStyle == NGMoviePlayerControlStyleInline) {
-        bottomControlsImageView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6f];
-        bottomControlsImageView.image = nil;
-    }
+    bottomControlsImageView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.6];
 }
 
 - (void)customizeControlsWithControlStyle:(NGMoviePlayerControlStyle)controlStyle {
@@ -103,12 +96,11 @@
 
 - (void)layoutBottomControlsViewWithControlStyle:(NGMoviePlayerControlStyle)controlStyle {
     CGFloat controlsViewHeight = [self bottomControlsViewHeightForControlStyle:controlStyle];
-    CGFloat offset = (self.controlStyle == NGMoviePlayerControlStyleFullscreen ? 20.f : 0.f);
 
-    self.bottomControlsView.frame = CGRectMake(offset,
+    self.bottomControlsView.frame = CGRectMake(0.f,
                                                self.height-controlsViewHeight,
-                                               self.width - 2.f*offset,
-                                               controlsViewHeight-offset);
+                                               self.width,
+                                               controlsViewHeight);
 }
 
 - (void)layoutControlsWithControlStyle:(NGMoviePlayerControlStyle)controlStyle {
@@ -292,7 +284,7 @@
 
     // volume control and zoom button are always on the right
     self.zoomControl.frame = CGRectMake(width-kControlWidth, 0.f, kControlWidth, controlsViewHeight);
-    [self.zoomControl setImage:[UIImage imageNamed:@"NGMoviePlayer.bundle/zoomIn"] forState:UIControlStateNormal];
+    [self.zoomControl setImage:[UIImage imageNamed:@"NGMoviePlayer.bundle/zoomOut"] forState:UIControlStateNormal];
 
     self.volumeControl.frame = CGRectMake(rightEdge-kControlWidth, self.bottomControlsView.frame.origin.y, kControlWidth, controlsViewHeight);
     rightEdge = self.volumeControl.frame.origin.x;
