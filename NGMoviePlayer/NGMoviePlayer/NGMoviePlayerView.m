@@ -215,6 +215,7 @@ static char playerLayerReadyForDisplayContext;
 
         [placeholderView resetToInitialState];
     }
+    self.placeholderView.frame = self.bounds;
 
     if (animated) {
         self.placeholderView.alpha = 0.f;
@@ -479,6 +480,10 @@ static char playerLayerReadyForDisplayContext;
         }
     }
 
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return YES;
 }
 
