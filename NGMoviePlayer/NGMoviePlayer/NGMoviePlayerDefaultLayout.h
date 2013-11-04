@@ -44,3 +44,9 @@ typedef enum {
 - (void)addTopControlsViewButton:(UIButton *)button;
 
 @end
+
+@interface NGMoviePlayerDefaultLayout (SubclassingHooks)
+
+- (void)setupScrubber:(NGScrubber *)scrubber controlStyle:(NGMoviePlayerControlStyle)controlStyle;
+
+@end
