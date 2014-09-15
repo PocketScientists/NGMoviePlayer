@@ -27,6 +27,7 @@
 @property (nonatomic, assign) NSTimeInterval playableDuration;
 @property (nonatomic, readonly, getter = isAirPlayButtonVisible) BOOL airPlayButtonVisible;
 
+@property (nonatomic, strong) NSDictionary *accessibilityDictionary;
 
 /******************************************
  @name Updating

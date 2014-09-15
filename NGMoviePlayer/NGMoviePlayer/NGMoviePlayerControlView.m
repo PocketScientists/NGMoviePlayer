@@ -66,6 +66,7 @@
 
         _volumeControl = [[NGVolumeControl alloc] initWithFrame:CGRectZero];
         _volumeControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        _volumeControl.isAccessibilityElement = YES;
         [_volumeControl addTarget:self action:@selector(handleVolumeChanged:) forControlEvents:UIControlEventValueChanged];
         if (UI_USER_INTERFACE_IDIOM()  == UIUserInterfaceIdiomPhone) {
             _volumeControl.sliderHeight = 130.f;
@@ -129,6 +130,7 @@
         _zoomControl = [UIButton buttonWithType:UIButtonTypeCustom];
         _zoomControl.showsTouchWhenHighlighted = YES;
         _zoomControl.contentMode = UIViewContentModeCenter;
+        
         [_zoomControl addTarget:self action:@selector(handleZoomButtonPress:) forControlEvents:UIControlEventTouchUpInside];
         [_topControlsView addSubview:_zoomControl];
 
@@ -197,6 +199,20 @@
 #pragma mark - NGMoviePlayerControlView
 ////////////////////////////////////////////////////////////////////////
 
+- (void)setAccessibilityDictionary:(NSDictionary*)dictionary {
+    _volumeControl.accessibilityLabel       = _volumeControl.accessibilityHint      = dictionary[@"volume"];
+    _forwardControl.accessibilityLabel      = _forwardControl.accessibilityHint     = dictionary[@"forward"];
+    _rewindControl.accessibilityLabel       = _rewindControl.accessibilityHint      = dictionary[@"rewind"];
+    _scrubberControl.accessibilityLabel     = _scrubberControl.accessibilityHint    = dictionary[@"scrubber"];
+    _zoomControl.accessibilityLabel         = _zoomControl.accessibilityHint        = dictionary[@"zoom"];
+    
+    if (_airPlayControl) {
+        _airPlayControl.accessibilityLabel  = _airPlayControl.accessibilityHint     = dictionary[@"airplay"];
+    }
+    
+    _accessibilityDictionary = dictionary;
+}
+
 - (void)setControlStyle:(NGMoviePlayerControlStyle)controlStyle {
     _controlStyle = controlStyle;
     [self.layout updateControlStyle:controlStyle];
@@ -242,6 +258,10 @@
         image = isPlaying ? [UIImage imageNamed:@"NGMoviePlayer.bundle/pause"] : [UIImage imageNamed:@"NGMoviePlayer.bundle/play"];
     } else {
         image = isPlaying ? [UIImage imageNamed:@"NGMoviePlayer.bundle/pauseFullscreen"] : [UIImage imageNamed:@"NGMoviePlayer.bundle/playFullscreen"];
+    }
+    
+    if (self.accessibilityDictionary) {
+        self.playPauseControl.accessibilityHint = self.playPauseControl.accessibilityLabel = self.accessibilityDictionary[isPlaying ? @"pause" : @"play"];
     }
 
     [self.playPauseControl setImage:image forState:UIControlStateNormal];
