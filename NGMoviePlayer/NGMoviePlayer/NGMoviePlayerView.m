@@ -560,7 +560,7 @@ static char playerLayerReadyForDisplayContext;
 }
 
 - (void)fadeOutControls {
-    if (_shouldHideControls && self.screenState == NGMoviePlayerScreenStateDevice) {
+    if (_shouldHideControls && self.screenState == NGMoviePlayerScreenStateDevice && !UIAccessibilityIsVoiceOverRunning()) {
         [self setControlsVisible:NO animated:YES];
     }
 }
