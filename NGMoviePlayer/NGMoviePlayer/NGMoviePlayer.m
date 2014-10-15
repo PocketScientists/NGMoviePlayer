@@ -29,6 +29,8 @@ static char playerAirPlayVideoActiveContext;
         unsigned int didFinishPlayback:1;
         unsigned int didPausePlayback:1;
         unsigned int didResumePlayback:1;
+        unsigned int playbackStalled:1;
+        unsigned int playbackFailed:1;
 
         unsigned int didBeginScrubbing:1;
         unsigned int didEndScrubbing:1;
@@ -130,15 +132,21 @@ static char playerAirPlayVideoActiveContext;
 
     [player removeObserver:self forKeyPath:@"rate"];
     [player removeObserver:self forKeyPath:@"currentItem"];
-	[_playerItem removeObserver:self forKeyPath:@"status"];
-    [_playerItem removeObserver:self forKeyPath:@"duration"];
-
     if ([AVPlayer instancesRespondToSelector:@selector(allowsAirPlayVideo)]) {
         [player removeObserver:self forKeyPath:@"airPlayVideoActive"];
     }
 
+    [_playerItem removeObserver:self forKeyPath:@"status"];
+    [_playerItem removeObserver:self forKeyPath:@"duration"];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:AVPlayerItemDidPlayToEndTimeNotification
+                                                  object:_playerItem];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemFailedToPlayToEndTimeNotification
+                                                  object:_playerItem];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVPlayerItemPlaybackStalledNotification
                                                   object:_playerItem];
 }
 
@@ -147,6 +155,8 @@ static char playerAirPlayVideoActiveContext;
 ////////////////////////////////////////////////////////////////////////
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    NSLog(@"NGMP: %@, %@, %@, %p", keyPath, object, change, context);
+    
     if (context == &playerItemStatusContext) {
         AVPlayerStatus status = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
 
@@ -210,11 +220,11 @@ static char playerAirPlayVideoActiveContext;
     }
 
     else if (context == &playerAirPlayVideoActiveContext) {
-        if ([AVPlayer instancesRespondToSelector:@selector(isAirPlayVideoActive)]) {
+        if ([AVPlayer instancesRespondToSelector:@selector(isExternalPlaybackActive)]) {
             [self.view updateViewsForCurrentScreenState];
 
             if (_delegateFlags.didChangeAirPlayActive) {
-                BOOL airPlayVideoActive = self.player.airPlayVideoActive;
+                BOOL airPlayVideoActive = self.player.externalPlaybackActive;
 
                 [self.delegate moviePlayer:self didChangeAirPlayActive:airPlayVideoActive];
             }
@@ -359,6 +369,7 @@ static char playerAirPlayVideoActiveContext;
 - (NGMoviePlayerView *)view {
     if (_view == nil) {
         _view = [[NGMoviePlayerView alloc] initWithFrame:CGRectZero];
+        _view.continueExternalPlayingIfViewHidden = self.continueExternalPlayingIfViewHidden;
         _view.delegate = self;
 
         // layout that is used per default
@@ -376,15 +387,8 @@ static char playerAirPlayVideoActiveContext;
     if (player != self.view.playerLayer.player) {
         // Support AirPlay?
         if (self.airPlayEnabled) {
-            [player setAllowsAirPlayVideo:YES];
-            [player setUsesAirPlayVideoWhileAirPlayScreenIsActive:YES];
-
-            [self.view.playerLayer.player removeObserver:self forKeyPath:@"airPlayVideoActive"];
-
-            [player addObserver:self
-                     forKeyPath:@"airPlayVideoActive"
-                        options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
-                        context:&playerAirPlayVideoActiveContext];
+            [player setAllowsExternalPlayback:YES];
+            [player setUsesExternalPlaybackWhileExternalScreenIsActive:YES];
         }
 
         self.view.playerLayer.player = player;
@@ -401,7 +405,7 @@ static char playerAirPlayVideoActiveContext;
 }
 
 - (BOOL)isAirPlayVideoActive {
-    return [AVPlayer instancesRespondToSelector:@selector(isAirPlayVideoActive)] && self.player.airPlayVideoActive;
+    return [AVPlayer instancesRespondToSelector:@selector(isExternalPlaybackActive)] && self.player.externalPlaybackActive;
 }
 
 - (void)setURL:(NSURL *)URL {
@@ -410,11 +414,13 @@ static char playerAirPlayVideoActiveContext;
 
         if (_view != nil) {
             [self.player pause];
+            /*
             [self.player removeObserver:self forKeyPath:@"rate"];
             [self.player removeObserver:self forKeyPath:@"currentItem"];
-          /*  if ([AVPlayer instancesRespondToSelector:@selector(allowsAirPlayVideo)]) {
+            if ([AVPlayer instancesRespondToSelector:@selector(allowsAirPlayVideo)]) {
                 [self.player removeObserver:self forKeyPath:@"airPlayVideoActive"];
-            }*/
+            }
+            */
             
             self.player = nil;
         }
@@ -449,6 +455,8 @@ static char playerAirPlayVideoActiveContext;
         _delegateFlags.didFinishPlayback = [delegate respondsToSelector:@selector(moviePlayer:didFinishPlaybackOfURL:)];
         _delegateFlags.didPausePlayback = [delegate respondsToSelector:@selector(moviePlayerDidPausePlayback:)];
         _delegateFlags.didResumePlayback = [delegate respondsToSelector:@selector(moviePlayerDidResumePlayback:)];
+        _delegateFlags.playbackFailed = [delegate respondsToSelector:@selector(moviePlayerPlaybackFailed:)];
+        _delegateFlags.playbackStalled = [delegate respondsToSelector:@selector(moviePlayerPlaybackStalled:)];
 
         _delegateFlags.didBeginScrubbing = [delegate respondsToSelector:@selector(moviePlayerDidBeginScrubbing:)];
         _delegateFlags.didEndScrubbing = [delegate respondsToSelector:@selector(moviePlayerDidEndScrubbing:)];
@@ -540,6 +548,14 @@ static char playerAirPlayVideoActiveContext;
     return self.view.controlsView.layout;
 }
 
+- (void)setContinueExternalPlayingIfViewHidden:(BOOL)continueExternalPlayingIfViewHidden
+{
+    _continueExternalPlayingIfViewHidden = continueExternalPlayingIfViewHidden;
+    if (_view) {
+        _view.continueExternalPlayingIfViewHidden = continueExternalPlayingIfViewHidden;
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////
 #pragma mark - Notifications
 ////////////////////////////////////////////////////////////////////////
@@ -552,6 +568,18 @@ static char playerAirPlayVideoActiveContext;
 
     if (_delegateFlags.didFinishPlayback) {
         [self.delegate moviePlayer:self didFinishPlaybackOfURL:self.URL];
+    }
+}
+
+- (void)playerItemFailedToPlayToEndTime:(NSNotification *)notification {
+    if (_delegateFlags.playbackFailed) {
+        [self.delegate moviePlayerPlaybackFailed:self];
+    }
+}
+
+- (void)playerItemPlaybackStalled:(NSNotification *)notification {
+    if (_delegateFlags.playbackStalled) {
+        [self.delegate moviePlayerPlaybackStalled:self];
     }
 }
 
@@ -809,6 +837,12 @@ static char playerAirPlayVideoActiveContext;
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:AVPlayerItemDidPlayToEndTimeNotification
                                                       object:self.playerItem];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:AVPlayerItemFailedToPlayToEndTimeNotification
+                                                      object:self.playerItem];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:AVPlayerItemPlaybackStalledNotification
+                                                      object:self.playerItem];
     }
 
     [self setPlayerItem:[AVPlayerItem playerItemWithAsset:asset]];
@@ -829,6 +863,14 @@ static char playerAirPlayVideoActiveContext;
                                              selector:@selector(playerItemDidPlayToEndTime:)
                                                  name:AVPlayerItemDidPlayToEndTimeNotification
                                                object:self.playerItem];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemFailedToPlayToEndTime:)
+                                                 name:AVPlayerItemFailedToPlayToEndTimeNotification
+                                               object:self.playerItem];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemPlaybackStalled:)
+                                                 name:AVPlayerItemPlaybackStalledNotification
+                                               object:self.playerItem];
 
     _seekToInitialPlaybackTimeBeforePlay = YES;
 
@@ -848,6 +890,12 @@ static char playerAirPlayVideoActiveContext;
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                          context:&playerRateContext];
 
+        if ([AVPlayer instancesRespondToSelector:@selector(allowsAirPlayVideo)]) {
+            [self.player addObserver:self
+                          forKeyPath:@"airPlayVideoActive"
+                             options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
+                             context:&playerAirPlayVideoActiveContext];
+        }
     }
 
     // New playerItem?

@@ -47,6 +47,8 @@
 @property (nonatomic, readonly, getter = isAirPlayVideoActive) BOOL airPlayVideoActive;
 /** flag to indicate whether the video autoplays when it's ready loading, defaults to NO */
 @property (nonatomic, assign) BOOL autostartWhenReady;
+/** indicates, that the player shall continue playing in airPlay mode even if the player view becomes hidden on the device. default NO */
+@property (nonatomic, assign) BOOL continueExternalPlayingIfViewHidden;
 
 /** current playback time of the player */
 @property (nonatomic, assign) NSTimeInterval currentPlaybackTime;

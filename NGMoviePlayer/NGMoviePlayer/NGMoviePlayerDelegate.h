@@ -20,6 +20,8 @@
 - (void)moviePlayer:(NGMoviePlayer *)moviePlayer didFinishPlaybackOfURL:(NSURL *)URL;
 - (void)moviePlayerDidPausePlayback:(NGMoviePlayer *)moviePlayer;
 - (void)moviePlayerDidResumePlayback:(NGMoviePlayer *)moviePlayer;
+- (void)moviePlayerPlaybackStalled:(NGMoviePlayer *)moviePlayer;
+- (void)moviePlayerPlaybackFailed:(NGMoviePlayer *)moviePlayer;
 
 - (void)moviePlayerDidBeginScrubbing:(NGMoviePlayer *)moviePlayer;
 - (void)moviePlayerDidEndScrubbing:(NGMoviePlayer *)moviePlayer;

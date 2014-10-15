@@ -39,6 +39,9 @@
 /** indicates, if status bar should be shown when displaying controls in fullscreen. default YES */
 @property (nonatomic, assign) BOOL shouldShowStatusBarInFullScreenMode;
 
+/** indicates, that the player shall continue playing in airPlay mode even if the player view becomes hidden on the device. default NO */
+@property (nonatomic, assign) BOOL continueExternalPlayingIfViewHidden;
+
 @property (nonatomic, readonly) CGFloat topControlsViewHeight;
 @property (nonatomic, readonly) CGFloat bottomControlsViewHeight;
 

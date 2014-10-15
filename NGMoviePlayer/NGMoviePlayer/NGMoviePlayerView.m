@@ -106,7 +106,9 @@ static char playerLayerReadyForDisplayContext;
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
     if (newSuperview == nil) {
-        [self.playerLayer.player pause];
+        if (!self.continueExternalPlayingIfViewHidden || !self.airPlayVideoActive) {
+            [self.playerLayer.player pause];
+        }
     }
 
     [super willMoveToSuperview:newSuperview];
@@ -114,7 +116,9 @@ static char playerLayerReadyForDisplayContext;
 
 - (void)willMoveToWindow:(UIWindow *)newWindow {
     if (newWindow == nil) {
-        [self.playerLayer.player pause];
+        if (!self.continueExternalPlayingIfViewHidden || !self.airPlayVideoActive) {
+            [self.playerLayer.player pause];
+        }
     }
 
     [super willMoveToWindow:newWindow];
@@ -566,8 +570,8 @@ static char playerLayerReadyForDisplayContext;
 }
 
 - (BOOL)isAirPlayVideoActive {
-    if ([AVPlayer instancesRespondToSelector:@selector(isAirPlayVideoActive)]) {
-        return self.playerLayer.player.airPlayVideoActive;
+    if ([AVPlayer instancesRespondToSelector:@selector(isExternalPlaybackActive)]) {
+        return self.playerLayer.player.externalPlaybackActive;
     }
 
     return NO;
