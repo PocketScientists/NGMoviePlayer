@@ -155,8 +155,6 @@ static char playerAirPlayVideoActiveContext;
 ////////////////////////////////////////////////////////////////////////
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    NSLog(@"NGMP: %@, %@, %@, %p", keyPath, object, change, context);
-    
     if (context == &playerItemStatusContext) {
         AVPlayerStatus status = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
 
