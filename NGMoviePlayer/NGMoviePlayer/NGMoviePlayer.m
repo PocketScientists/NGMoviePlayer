@@ -128,14 +128,17 @@ static char playerAirPlayVideoActiveContext;
     [_view removeFromSuperview];
 
     [self stopObservingPlayerTimeChanges];
-    [player pause];
+    
+    if (player) {
+        [player pause];
 
-    [player removeObserver:self forKeyPath:@"rate"];
-    [player removeObserver:self forKeyPath:@"currentItem"];
-    if ([AVPlayer instancesRespondToSelector:@selector(allowsAirPlayVideo)]) {
-        [player removeObserver:self forKeyPath:@"airPlayVideoActive"];
+        [player removeObserver:self forKeyPath:@"rate"];
+        [player removeObserver:self forKeyPath:@"currentItem"];
+        if ([AVPlayer instancesRespondToSelector:@selector(allowsAirPlayVideo)]) {
+            [player removeObserver:self forKeyPath:@"airPlayVideoActive"];
+        }
     }
-
+    
     [_playerItem removeObserver:self forKeyPath:@"status"];
     [_playerItem removeObserver:self forKeyPath:@"duration"];
     
@@ -383,13 +386,23 @@ static char playerAirPlayVideoActiveContext;
 
 - (void)setPlayer:(AVPlayer *)player {
     if (player != self.view.playerLayer.player) {
-        // Support AirPlay?
-        if (self.airPlayEnabled) {
-            [player setAllowsExternalPlayback:YES];
-            [player setUsesExternalPlaybackWhileExternalScreenIsActive:YES];
+        if (player == nil) {
+            [self.player removeObserver:self forKeyPath:@"rate"];
+            [self.player removeObserver:self forKeyPath:@"currentItem"];
+            if ([AVPlayer instancesRespondToSelector:@selector(allowsAirPlayVideo)]) {
+                [self.player removeObserver:self forKeyPath:@"airPlayVideoActive"];
+            }
+            self.view.playerLayer.player = nil;
         }
+        else {
+            // Support AirPlay?
+            if (self.airPlayEnabled) {
+                [player setAllowsExternalPlayback:YES];
+                [player setUsesExternalPlaybackWhileExternalScreenIsActive:YES];
+            }
 
-        self.view.playerLayer.player = player;
+            self.view.playerLayer.player = player;
+        }
         self.view.delegate = self;
     }
 }
@@ -412,14 +425,6 @@ static char playerAirPlayVideoActiveContext;
 
         if (_view != nil) {
             [self.player pause];
-            /*
-            [self.player removeObserver:self forKeyPath:@"rate"];
-            [self.player removeObserver:self forKeyPath:@"currentItem"];
-            if ([AVPlayer instancesRespondToSelector:@selector(allowsAirPlayVideo)]) {
-                [self.player removeObserver:self forKeyPath:@"airPlayVideoActive"];
-            }
-            */
-            
             self.player = nil;
         }
 
