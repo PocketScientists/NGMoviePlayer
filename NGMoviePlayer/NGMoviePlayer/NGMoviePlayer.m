@@ -172,7 +172,7 @@ static char playerAirPlayVideoActiveContext;
             case AVPlayerStatusReadyToPlay: {
                 // TODO: Enable buttons & scrubber
                 if (!self.scrubbing) {
-                    if (self.autostartWhenReady && self.view.superview != nil && [UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+                    if (self.autostartWhenReady && self.view.superview != nil && ([UIApplication sharedApplication].applicationState == UIApplicationStateActive || [self isAirPlayVideoActive])) {
                         _autostartWhenReady = NO;
                         [self play];
                     }
