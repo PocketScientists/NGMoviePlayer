@@ -38,6 +38,7 @@ static char playerAirPlayVideoActiveContext;
         unsigned int didChangeStatus:1;
         unsigned int didChangePlaybackRate:1;
 		unsigned int didChangeAirPlayActive:1;
+        unsigned int didChangePictureInPictureActive:1;
         unsigned int didChangeControlStyle:1;
         unsigned int didUpdateCurrentTime:1;
         
@@ -400,8 +401,13 @@ static char playerAirPlayVideoActiveContext;
                 [player setAllowsExternalPlayback:YES];
                 [player setUsesExternalPlaybackWhileExternalScreenIsActive:YES];
             }
-
+            
             self.view.playerLayer.player = player;
+            
+            if (AVPictureInPictureController.isPictureInPictureSupported) {
+                self.pictureInPictureController = [[AVPictureInPictureController alloc] initWithPlayerLayer:self.view.playerLayer];
+            }
+
         }
         self.view.delegate = self;
     }
@@ -467,6 +473,7 @@ static char playerAirPlayVideoActiveContext;
         _delegateFlags.didChangeStatus = [delegate respondsToSelector:@selector(moviePlayer:didChangeStatus:)];
         _delegateFlags.didChangePlaybackRate = [delegate respondsToSelector:@selector(moviePlayer:didChangePlaybackRate:)];
         _delegateFlags.didChangeAirPlayActive = [delegate respondsToSelector:@selector(moviePlayer:didChangeAirPlayActive:)];
+        _delegateFlags.didChangePictureInPictureActive = [delegate respondsToSelector:@selector(moviePlayer:didChangePictureInPictureActive:)];
         _delegateFlags.didChangeControlStyle = [delegate respondsToSelector:@selector(moviePlayer:didChangeControlStyle:)];
         _delegateFlags.didUpdateCurrentTime = [delegate respondsToSelector:@selector(moviePlayer:didUpdateCurrentTime:)];
         
@@ -750,7 +757,24 @@ static char playerAirPlayVideoActiveContext;
             [self.view restartFadeOutControlsViewTimer];
             break;
         }
+            
+        case NGMoviePlayerControlActionPictureInPictureActivated: {
+            BOOL active = NO;
+            if (self.pictureInPictureController.isPictureInPictureActive) {
+                //active = NO;
+                [self.pictureInPictureController stopPictureInPicture];
+            } else {
+                active = YES;
+                [self.pictureInPictureController startPictureInPicture];
+            }
+            
+            if (_delegateFlags.didChangePictureInPictureActive) {
+                [self.delegate moviePlayer:self didChangePictureInPictureActive:active];
+            }
+            break;
+        }
 
+        
         default:
             // do nothing
             break;

@@ -65,6 +65,9 @@
 @property (nonatomic, strong, readonly) MPVolumeView *airPlayControl;
 @property (nonatomic, readonly, getter = isAirPlayControlVisible) BOOL airPlayControlVisible;
 
+@property (nonatomic, strong, readonly) UIButton *pictureInPictureButton;
+
+
 @property (nonatomic, strong, readonly) UIButton *zoomControl;
 
 

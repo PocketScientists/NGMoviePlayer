@@ -25,6 +25,8 @@
 @property (nonatomic, strong, readwrite) UILabel *currentTimeLabel;
 @property (nonatomic, strong, readwrite) UILabel *remainingTimeLabel;
 
+@property (nonatomic, strong, readwrite) UIButton *pictureInPictureButton;
+
 @property (nonatomic, strong, readwrite) NGVolumeControl *volumeControl;
 @property (nonatomic, strong, readwrite) UIControl *airPlayControlContainer;
 @property (nonatomic, strong, readwrite) MPVolumeView *airPlayControl;
@@ -61,6 +63,8 @@
         self.airPlayControlContainer = moviePlayer.view.controlsView.airPlayControlContainer;
         self.airPlayControl = moviePlayer.view.controlsView.airPlayControl;
 
+        self.pictureInPictureButton = moviePlayer.view.controlsView.pictureInPictureButton;
+        
         self.zoomControl = moviePlayer.view.controlsView.zoomControl;
     }
 }

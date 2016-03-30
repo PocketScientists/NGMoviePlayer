@@ -286,6 +286,11 @@
     self.zoomControl.frame = CGRectMake(width-kControlWidth, 0.f, kControlWidth, controlsViewHeight);
     [self.zoomControl setImage:[UIImage imageNamed:@"NGMoviePlayer.bundle/zoomOut"] forState:UIControlStateNormal];
 
+    if (self.pictureInPictureButton) {
+        self.pictureInPictureButton.frame = CGRectMake(rightEdge - kControlWidth, 0.f, kControlWidth, controlsViewHeight);
+        rightEdge = self.pictureInPictureButton.frame.origin.x;
+    }
+    
     self.volumeControl.frame = CGRectMake(rightEdge-kControlWidth, self.bottomControlsView.frame.origin.y, kControlWidth, controlsViewHeight);
     rightEdge = self.volumeControl.frame.origin.x;
 
@@ -295,7 +300,7 @@
     if (self.airPlayControlVisible) {
         rightEdge = self.airPlayControlContainer.frame.origin.x;
     }
-
+    
     self.currentTimeLabel.frame = CGRectMake(leftEdge, 0.f, 55.f, controlsViewHeight);
     self.currentTimeLabel.textAlignment = NSTextAlignmentCenter;
     leftEdge = self.currentTimeLabel.frame.origin.x + self.currentTimeLabel.frame.size.width;
@@ -303,9 +308,11 @@
     self.remainingTimeLabel.frame = CGRectMake(rightEdge-60.f, 0.f, 60.f, controlsViewHeight);
     self.remainingTimeLabel.textAlignment = NSTextAlignmentCenter;
     rightEdge = self.remainingTimeLabel.frame.origin.x;
-
+    
     // scrubber uses remaining width
     self.scrubberControl.frame = CGRectMake(leftEdge, 0.f, rightEdge - leftEdge, controlsViewHeight);
+    
+    
 }
 
 - (void)layoutSubviewsForControlStyleFullscreen {
@@ -338,6 +345,10 @@
     self.volumeControl.frame = CGRectMake(width + self.bottomControlsView.frame.origin.x - controlWidth - outerPadding, self.bottomControlsView.frame.origin.y + topY, controlWidth, controlHeight);
     // airplay left-aligned
     self.airPlayControlContainer.frame = CGRectMake(outerPadding, topY+2.f, controlWidth, controlHeight);
+    
+    if (self.pictureInPictureButton) {
+        self.pictureInPictureButton.frame = CGRectMake(width - 55.f - outerPadding, topY + 2.f, controlWidth, controlHeight);
+    }
 
     // next row of controls
     topY += controlHeight + 5.f;

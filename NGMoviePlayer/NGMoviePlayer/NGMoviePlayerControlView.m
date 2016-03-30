@@ -14,6 +14,8 @@
 #import "NGMoviePlayerFunctions.h"
 #import "NGMoviePlayerLayout.h"
 
+#import <AVKit/AVKit.h>
+
 
 @interface NGMoviePlayerControlView () {
     BOOL _statusBarHidden;
@@ -34,6 +36,7 @@
 @property (nonatomic, strong, readwrite) UILabel *remainingTimeLabel;
 @property (nonatomic, strong, readwrite) NGVolumeControl *volumeControl;
 @property (nonatomic, strong, readwrite) UIControl *airPlayControlContainer;
+@property (nonatomic, strong, readwrite) UIButton *pictureInPictureButton;
 @property (nonatomic, strong, readwrite) MPVolumeView *airPlayControl;
 @property (nonatomic, strong, readwrite) UIButton *zoomControl;
 
@@ -90,6 +93,18 @@
             [_airPlayControlContainer addSubview:_airPlayControl];
             [_bottomControlsView addSubview:_airPlayControlContainer];
         }
+        
+        if (AVPictureInPictureController.isPictureInPictureSupported) {
+            _pictureInPictureButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            _pictureInPictureButton.frame = CGRectZero;
+            [_pictureInPictureButton addTarget:self action:@selector(handlePiPButtonPress:) forControlEvents:UIControlEventTouchUpInside];
+#warning TODO: set correct icon
+            [_pictureInPictureButton setImage:[UIImage imageNamed:@"NGMoviePlayer.bundle/pauseFullscreen"] forState:UIControlStateNormal];
+            _pictureInPictureButton.showsTouchWhenHighlighted = YES;
+            [_bottomControlsView addSubview:_pictureInPictureButton];
+        }
+        
+        
 
         _rewindControl = [UIButton buttonWithType:UIButtonTypeCustom];
         _rewindControl.frame = CGRectMake(60.f, 10.f, 40.f, 40.f);
@@ -327,6 +342,10 @@
     }
 
     [self.delegate moviePlayerControl:self.airPlayControl didPerformAction:NGMoviePlayerControlActionAirPlayMenuActivated];
+}
+
+- (void)handlePiPButtonPress:(id)sender {
+    [self.delegate moviePlayerControl:sender didPerformAction:NGMoviePlayerControlActionPictureInPictureActivated];
 }
 
 @end

@@ -67,6 +67,9 @@
 
 
 @property (nonatomic, strong) NGMoviePlayerLayout *layout;
+/** controller for PicutreInPicture function */
+@property (nonatomic, strong) AVPictureInPictureController *pictureInPictureController;
+
 
 /**
  By changing the audio session category you can influence how your audio output interacts with

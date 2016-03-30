@@ -32,6 +32,8 @@
 @property (nonatomic, strong, readonly) NGVolumeControl *volumeControl;
 @property (nonatomic, strong, readonly) UIControl *airPlayControlContainer;
 @property (nonatomic, strong, readonly) MPVolumeView *airPlayControl;
+@property (nonatomic, strong, readonly) UIButton *pictureInPictureButton;
+
 
 @property (nonatomic, strong, readonly) UIButton *zoomControl;
 

@@ -29,6 +29,7 @@
 - (void)moviePlayer:(NGMoviePlayer *)moviePlayer didChangeStatus:(AVPlayerStatus)playerStatus;
 - (void)moviePlayer:(NGMoviePlayer *)moviePlayer didChangePlaybackRate:(float)rate;
 - (void)moviePlayer:(NGMoviePlayer *)moviePlayer didChangeAirPlayActive:(BOOL)airPlayVideoActive;
+- (void)moviePlayer:(NGMoviePlayer *)moviePlayer didChangePictureInPictureActive:(BOOL)pictureInPictureActive;
 - (void)moviePlayer:(NGMoviePlayer *)moviePlayer didChangeControlStyle:(NGMoviePlayerControlStyle)controlStyle;
 - (void)moviePlayer:(NGMoviePlayer *)moviePlayer didUpdateCurrentTime:(NSTimeInterval)currentTime;
 
