@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.source_files = 'NGMoviePlayer/*/*.{h,m}'
   s.resource = 'NGMoviePlayer/Resources/NGMoviePlayer.bundle'
   s.requires_arc = true
-  s.frameworks   = 'CoreMedia', 'AudioToolbox', 'AVFoundation', 'MediaPlayer'
+  s.frameworks   = 'CoreMedia', 'AudioToolbox', 'AVFoundation', 'MediaPlayer', 'AVKit'
 
   s.prefix_header_contents = '
 #ifdef __OBJC__
@@ -18,6 +18,7 @@ Pod::Spec.new do |s|
   #import <AVFoundation/AVFoundation.h>
   #import <QuartzCore/QuartzCore.h>
   #import <MediaPlayer/MediaPlayer.h>
+  #import <AVKit/AVKit.h>
 #endif
 
 #define kNGFadeDuration                     0.33
