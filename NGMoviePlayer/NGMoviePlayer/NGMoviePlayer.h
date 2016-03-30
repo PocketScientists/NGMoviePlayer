@@ -71,6 +71,7 @@
 @property (nonatomic, strong) NGMoviePlayerLayout *layout;
 /** controller for PicutreInPicture function */
 @property (nonatomic, strong) AVPictureInPictureController *pictureInPictureController;
+- (void)stopPictureInPicture;
 
 
 /**

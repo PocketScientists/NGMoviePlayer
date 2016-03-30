@@ -653,6 +653,15 @@ static char playerAirPlayVideoActiveContext;
                                                         userInfo:[NSNumber numberWithInt:NGMoviePlayerControlActionBeginSkippingForwards]
                                                          repeats:YES];
 }
+////////////////////////////////////////////////////////////////////////
+#pragma mark - AVPictureInPicture methods
+////////////////////////////////////////////////////////////////////////
+
+- (void)stopPictureInPicture {
+    if (self.pictureInPictureController.isPictureInPictureActive) {
+        [self.pictureInPictureController stopPictureInPicture];
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////
 #pragma mark - AVPictureInPictureDelegate
