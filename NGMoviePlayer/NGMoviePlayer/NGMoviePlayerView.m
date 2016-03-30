@@ -334,8 +334,11 @@ static char playerLayerReadyForDisplayContext;
 
 - (void)updateWithPlaybackStatus:(BOOL)isPlaying {
     [self.controlsView updateButtonsWithPlaybackStatus:isPlaying];
-
     _shouldHideControls = isPlaying;
+}
+
+- (void)updatePictureInPictureButtonWithImage:(UIImage *)image {
+    [self.controlsView updatePictureInPictureButtonWithImage:image];
 }
 
 - (void)addVideoOverlayView:(UIView *)overlayView {

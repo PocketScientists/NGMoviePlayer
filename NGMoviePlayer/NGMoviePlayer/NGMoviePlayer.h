@@ -20,6 +20,8 @@
 #import "NGMoviePlayerDefaultLayout.h"
 #import "NGMoviePlayerSystemLayout.h"
 
+#import <AVKit/AVKit.h>
+
 
 @interface NGMoviePlayer : NSObject
 

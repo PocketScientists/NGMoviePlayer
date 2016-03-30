@@ -63,6 +63,7 @@
 /** Updates the UI to reflect the current time */
 - (void)updateWithCurrentTime:(NSTimeInterval)currentTime duration:(NSTimeInterval)duration;
 - (void)updateWithPlaybackStatus:(BOOL)isPlaying;
+- (void)updatePictureInPictureButtonWithImage:(UIImage *)image;
 
 /** Adds an overlay view to the view that is beneath the controls but on top of the video */
 - (void)addVideoOverlayView:(UIView *)overlayView;

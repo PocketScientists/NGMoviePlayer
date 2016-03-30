@@ -21,7 +21,7 @@ static char playerRateContext;
 static char playerAirPlayVideoActiveContext;
 
 
-@interface NGMoviePlayer () <NGMoviePlayerControlActionDelegate> {
+@interface NGMoviePlayer () <NGMoviePlayerControlActionDelegate, AVPictureInPictureControllerDelegate> {
     // flags for methods implemented in the delegate
     struct {
         unsigned int didStartPlayback:1;
@@ -406,6 +406,8 @@ static char playerAirPlayVideoActiveContext;
             
             if (AVPictureInPictureController.isPictureInPictureSupported) {
                 self.pictureInPictureController = [[AVPictureInPictureController alloc] initWithPlayerLayer:self.view.playerLayer];
+                self.pictureInPictureController.delegate = self;
+                [self.view updatePictureInPictureButtonWithImage:[AVPictureInPictureController pictureInPictureButtonStartImageCompatibleWithTraitCollection:nil]];
             }
 
         }
@@ -651,6 +653,20 @@ static char playerAirPlayVideoActiveContext;
                                                         userInfo:[NSNumber numberWithInt:NGMoviePlayerControlActionBeginSkippingForwards]
                                                          repeats:YES];
 }
+
+////////////////////////////////////////////////////////////////////////
+#pragma mark - AVPictureInPictureDelegate
+////////////////////////////////////////////////////////////////////////
+
+- (void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+    [self.view updatePictureInPictureButtonWithImage:[AVPictureInPictureController pictureInPictureButtonStopImageCompatibleWithTraitCollection:nil]];
+}
+
+
+- (void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+    [self.view updatePictureInPictureButtonWithImage:[AVPictureInPictureController pictureInPictureButtonStartImageCompatibleWithTraitCollection:nil]];
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 #pragma mark - NGMoviePlayerControlViewDelegate

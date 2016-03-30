@@ -139,6 +139,13 @@
     }
 }
 
+- (void)setVolumeScrubberHidden:(BOOL)volumeScrubberHidden {
+    if (volumeScrubberHidden != _volumeScrubberHidden) {
+        _volumeScrubberHidden = volumeScrubberHidden;
+        [self invalidateLayout];
+    }
+}
+
 - (void)addTopControlsViewButton:(UIButton *)button {
     CGFloat maxX = 0.f;
     CGFloat height = [self topControlsViewHeightForControlStyle:self.controlStyle];
@@ -291,8 +298,12 @@
         rightEdge = self.pictureInPictureButton.frame.origin.x;
     }
     
-    self.volumeControl.frame = CGRectMake(rightEdge-kControlWidth, self.bottomControlsView.frame.origin.y, kControlWidth, controlsViewHeight);
-    rightEdge = self.volumeControl.frame.origin.x;
+    if (self.volumeScrubberHidden == NO) {
+        self.volumeControl.frame = CGRectMake(rightEdge-kControlWidth, self.bottomControlsView.frame.origin.y, kControlWidth, controlsViewHeight);
+        rightEdge = self.volumeControl.frame.origin.x;
+    } else {
+        self.volumeControl.frame = CGRectZero;
+    }
 
     // we always position the airplay button, but only update the left edge when the button is visible
     // this is a workaround for a layout bug I can't remember
@@ -342,7 +353,11 @@
     self.forwardControl.hidden = !displaySkipButtons;
 
     // volume right-aligned in first row
-    self.volumeControl.frame = CGRectMake(width + self.bottomControlsView.frame.origin.x - controlWidth - outerPadding, self.bottomControlsView.frame.origin.y + topY, controlWidth, controlHeight);
+    if (self.volumeScrubberHidden == NO) {
+        self.volumeControl.frame = CGRectMake(width + self.bottomControlsView.frame.origin.x - controlWidth - outerPadding, self.bottomControlsView.frame.origin.y + topY, controlWidth, controlHeight);
+    } else {
+        self.volumeControl.frame = CGRectZero;
+    }
     // airplay left-aligned
     self.airPlayControlContainer.frame = CGRectMake(outerPadding, topY+2.f, controlWidth, controlHeight);
     

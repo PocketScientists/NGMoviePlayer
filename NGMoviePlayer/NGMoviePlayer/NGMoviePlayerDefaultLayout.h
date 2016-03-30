@@ -26,6 +26,7 @@ typedef enum {
 
 @property (nonatomic, assign) BOOL scrubberHidden;
 @property (nonatomic, assign) BOOL skipButtonsHidden;
+@property (nonatomic, assign) BOOL volumeScrubberHidden;
 @property (nonatomic, assign) CGFloat minWidthToDisplaySkipButtons;
 
 /** the color of the scrubber */

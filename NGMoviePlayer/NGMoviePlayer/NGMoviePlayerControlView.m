@@ -98,8 +98,6 @@
             _pictureInPictureButton = [UIButton buttonWithType:UIButtonTypeCustom];
             _pictureInPictureButton.frame = CGRectZero;
             [_pictureInPictureButton addTarget:self action:@selector(handlePiPButtonPress:) forControlEvents:UIControlEventTouchUpInside];
-#warning TODO: set correct icon
-            [_pictureInPictureButton setImage:[UIImage imageNamed:@"NGMoviePlayer.bundle/pauseFullscreen"] forState:UIControlStateNormal];
             _pictureInPictureButton.showsTouchWhenHighlighted = YES;
             [_bottomControlsView addSubview:_pictureInPictureButton];
         }
@@ -280,6 +278,15 @@
     }
 
     [self.playPauseControl setImage:image forState:UIControlStateNormal];
+}
+
+- (void)updatePictureInPictureButtonWithImage:(UIImage *)pipButtonImage {
+    if (self.pictureInPictureButton) {
+        pipButtonImage = [pipButtonImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [self.pictureInPictureButton.imageView setTintColor:[UIColor whiteColor]];
+        
+        [self.pictureInPictureButton setImage:pipButtonImage forState:UIControlStateNormal];
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////

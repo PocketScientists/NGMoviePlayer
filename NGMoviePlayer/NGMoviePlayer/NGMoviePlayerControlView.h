@@ -35,5 +35,6 @@
 
 - (void)updateScrubberWithCurrentTime:(NSTimeInterval)currentTime duration:(NSTimeInterval)duration;
 - (void)updateButtonsWithPlaybackStatus:(BOOL)isPlaying;
+- (void)updatePictureInPictureButtonWithImage:(UIImage *)pipButtonImage;
 
 @end
