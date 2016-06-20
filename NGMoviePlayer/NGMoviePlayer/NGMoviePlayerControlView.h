@@ -23,6 +23,8 @@
 
 @property (nonatomic, assign) NGMoviePlayerControlScrubbingTimeDisplay scrubbingTimeDisplay;
 
+@property (nonatomic, readonly) NSTimeInterval scrubberValue;
+
 @property (nonatomic, readonly) NSArray *topControlsViewButtons;
 @property (nonatomic, assign) NSTimeInterval playableDuration;
 @property (nonatomic, readonly, getter = isAirPlayButtonVisible) BOOL airPlayButtonVisible;

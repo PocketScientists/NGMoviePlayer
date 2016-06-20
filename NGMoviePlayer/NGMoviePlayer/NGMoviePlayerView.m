@@ -316,10 +316,19 @@ static char playerLayerReadyForDisplayContext;
     return CGRectGetMaxY(self.controlsView.topControlsView.frame);
 }
 
+- (CGFloat)topControlsViewWidth {
+    CGFloat width = CGRectGetMaxX(self.controlsView.topControlsView.frame);
+    return width;
+}
+
 - (CGFloat)bottomControlsViewHeight {
     CGFloat height = CGRectGetHeight(self.controlsView.frame);
 
     return  height - CGRectGetMinY(self.controlsView.bottomControlsView.frame) + 2*(height - CGRectGetMaxY(self.controlsView.bottomControlsView.frame));
+}
+
+- (NSTimeInterval)currentScrubberValue {
+    return self.controlsView.scrubberValue;
 }
 
 ////////////////////////////////////////////////////////////////////////

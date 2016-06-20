@@ -264,6 +264,10 @@
     [self.scrubberControl setValue:currentTime];
 }
 
+- (NSTimeInterval)scrubberValue {
+    return self.scrubberControl.value;
+}
+
 - (void)updateButtonsWithPlaybackStatus:(BOOL)isPlaying {
     UIImage *image = nil;
 

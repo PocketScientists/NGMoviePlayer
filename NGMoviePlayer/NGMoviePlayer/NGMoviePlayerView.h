@@ -41,8 +41,11 @@
 
 /** indicates, that the player shall continue playing in airPlay mode even if the player view becomes hidden on the device. default NO */
 @property (nonatomic, assign) BOOL continueExternalPlayingIfViewHidden;
+/** the current value of the progress scrubber */
+@property (nonatomic, readonly) NSTimeInterval currentScrubberValue;
 
 @property (nonatomic, readonly) CGFloat topControlsViewHeight;
+@property (nonatomic, readonly) CGFloat topControlsViewWidth;
 @property (nonatomic, readonly) CGFloat bottomControlsViewHeight;
 
 @property (nonatomic, readonly) NGMoviePlayerScreenState screenState;

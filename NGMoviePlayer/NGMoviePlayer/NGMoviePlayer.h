@@ -54,25 +54,35 @@
 
 /** current playback time of the player */
 @property (nonatomic, assign) NSTimeInterval currentPlaybackTime;
+/** is set if the current playback time should be show with an offset. the shown current playback time will be the offset plus the real current playbacktime */
+@property (nonatomic, assign) NSTimeInterval currentPlaybackTimeOffset;
 /** total duration of played video */
 @property (nonatomic, readonly) NSTimeInterval duration;
+/** custom duration that shoud be shown on the scubber/progress time view. */
+@property (nonatomic, assign) NSTimeInterval userSetDuration;
+/** indicates if the userSetDuration should be used (YES) or the duration of AVPlayerItem (NO) */
+@property (nonatomic, assign) BOOL shouldShowUserSetDuration;
 /** currently downloaded duration which is already playable */
 @property (nonatomic, readonly) NSTimeInterval playableDuration;
 /** initialPlaybackTime for playing the video */
 @property (nonatomic, assign) NSTimeInterval initialPlaybackTime;
+/** returns the value of the scrubber in the movie player's control view */
+@property (nonatomic, readonly) NSTimeInterval currentScrubberValue;
 
 
 /** tolerance offset in seconds that is used when playing from an initial playback time, use greater values for faster seeking. Defaults to kCMTimePositiveInfinity seconds */
 @property (nonatomic, assign) NSTimeInterval initialPlaybackToleranceTime;
 /** tolerance offset in seconds that is used when seeking to a specific time, use greater values for faster seeking. Defaults to 2 seconds */
 @property (nonatomic, assign) NSTimeInterval seekingToleranceTime;
+/** to allow starting videos  in background */
+@property (nonatomic, assign) BOOL allowPlayingInBackground;
 
 
 @property (nonatomic, strong) NGMoviePlayerLayout *layout;
 /** controller for PicutreInPicture function */
 @property (nonatomic, strong) AVPictureInPictureController *pictureInPictureController;
 - (void)stopPictureInPicture;
-
+- (void)startPictureInPicture;
 
 /**
  By changing the audio session category you can influence how your audio output interacts with
@@ -83,12 +93,16 @@
 
 - (id)initWithURL:(NSURL *)URL;
 - (id)initWithURL:(NSURL *)URL initialPlaybackTime:(NSTimeInterval)initialPlaybackTime;
+- (id)initWithURL:(NSURL *)URL initialPlaybackTime:(NSTimeInterval)initialPlaybackTime duration:(NSTimeInterval)duration;
 
 - (void)setURL:(NSURL *)URL initialPlaybackTime:(NSTimeInterval)initialPlaybackTime;
 
 - (void)play;
 - (void)pause;
 - (void)togglePlaybackState;
+/** CAUTION: pretty untested method */
+- (void)stop;
+
 
 /**
  Convenience method to set frame of view and add to superview
