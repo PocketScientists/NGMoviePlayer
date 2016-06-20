@@ -999,7 +999,7 @@ static char playerAirPlayVideoActiveContext;
 
 - (void)removeObserversFromPlayerItem:(AVPlayerItem *)playerItem {
     NSLog(@"[NGMoviePlayer] Remove observers from playerItem");
-    if (playerItem) {
+    if (playerItem) {
         [playerItem removeObserver:self forKeyPath:@"status"];
         [playerItem removeObserver:self forKeyPath:@"duration"];
         
