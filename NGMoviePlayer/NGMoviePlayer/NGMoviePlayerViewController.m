@@ -15,8 +15,6 @@
     BOOL _statusBarHidden;
 }
 
-@property (nonatomic, strong, readwrite) NGMoviePlayer *moviePlayer; // overwrite as readwrite
-
 @end
 
 
@@ -32,9 +30,9 @@
         _statusBarStyle = [UIApplication sharedApplication].statusBarStyle;
         _statusBarHidden = [UIApplication sharedApplication].statusBarHidden;
 
-        _moviePlayer = [[[[self class] moviePlayerClass] alloc] initWithURL:contentURL];
-        _moviePlayer.delegate = self;
-        _moviePlayer.autostartWhenReady = YES;
+//        _moviePlayer = [[[[self class] moviePlayerClass] alloc] initWithURL:contentURL];
+//        _moviePlayer.delegate = self;
+//        _moviePlayer.autostartWhenReady = YES;
     }
 
     return self;
@@ -129,7 +127,6 @@
         [self.navigationController popViewControllerAnimated:YES];
     } else {
         [self dismissViewControllerAnimated:YES completion:^{
-            self.moviePlayer = nil;
         }];
     }
 }

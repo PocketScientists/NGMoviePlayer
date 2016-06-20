@@ -14,11 +14,10 @@
 
 
 @interface NGMoviePlayerViewController : UIViewController <NGMoviePlayerDelegate> {
-    @protected
-    NGMoviePlayer *_moviePlayer;
+
 }
 
-@property (nonatomic, strong, readonly) NGMoviePlayer *moviePlayer;
+@property (nonatomic, strong) NGMoviePlayer *moviePlayer;
 
 - (id)initWithContentURL:(NSURL *)contentURL;
 
