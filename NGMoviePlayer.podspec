@@ -3,8 +3,9 @@ Pod::Spec.new do |s|
   s.name         = 'NGMoviePlayer'
   s.version      = '1.0.0'
   s.license      = ''
-  s.summary      = ''
-  s.homepage     = ""
+  s.summary      = 'A movieplayer based on AVFoundation'
+  s.homepage     = 'http://pocketscience.com/'
+  s.authors      = { 'PocketScience GmbH' => 'r.grill@pocketscience.com' }
   s.source       = { :git => 'https://github.com/PocketScientists/NGMoviePlayer.git' }
   s.source_files = 'NGMoviePlayer/*/*.{h,m}'
   s.resource = 'NGMoviePlayer/Resources/NGMoviePlayer.bundle'
